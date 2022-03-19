@@ -4,3 +4,5 @@
 - Base python code added to repo and work log created.
 - Visual Code files excluded from git and .json file created for easy 
 debbuging using command line parameters in VS Code
+- 30 min of work approximately between watching the recordings for help with
+some steps and all the activities described above
