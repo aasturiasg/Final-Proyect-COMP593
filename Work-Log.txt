@@ -2,3 +2,5 @@
 - GitHub desktop downloaded from https://desktop.github.com/ and installed.
 - Final-Proyect-COMP593 repository created.
 - Base python code added to repo and work log created.
+- Visual Code files excluded from git and .json file created for easy 
+debbuging using command line parameters in VS Code
