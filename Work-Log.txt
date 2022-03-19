@@ -1,0 +1,4 @@
+2022-03-19
+- GitHub desktop downloaded from https://desktop.github.com/ and installed.
+- Final-Proyect-COMP593 repository created.
+- Base python code added to repo and work log created.
