@@ -1,8 +1,20 @@
 2022-03-19
-- GitHub desktop downloaded from https://desktop.github.com/ and installed.
-- Final-Proyect-COMP593 repository created.
-- Base python code added to repo and work log created.
+- GitHub desktop downloaded from https://desktop.github.com/ and installed
+- Final-Proyect-COMP593 repository created
+- Base python code added to repo and work log created
 - Visual Code files excluded from git and .json file created for easy 
 debbuging using command line parameters in VS Code
 - 30 min of work approximately between watching the recordings for help with
 some steps and all the activities described above
+
+2022-03-20
+- Full base Python code studied
+- Function create_image_db completed: data base connection, table creation,
+and commits
+- Lab 4 used as guide: https://github.com/aasturiasg/COMP-593-Repository/blob/main/Lab-4-Advanced-SQL-%26-Files.ipynb
+- API key to use APOD obtained from https://api.nasa.gov/
+- API key: lMDGG0bANZOe9caY59RJmVoaviTTzzdTDRihVaw5
+- get_apod_info function completed: APOD image information successfully 
+obtained from API
+- Help establishing the connection obtained from: https://medium.com/daily-python/consuming-nasa-api-using-python-part-1-daily-python-17-4ce104fa47ab
+- 1 hr 40 min of work approximately

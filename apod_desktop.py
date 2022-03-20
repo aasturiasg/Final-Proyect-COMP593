@@ -13,13 +13,18 @@ Parameters:
   apod_date = APOD image date (format: YYYY-MM-DD)
 
 History:
-  Date        Author    Description
-  2022-03-11  J.Dalby   Initial creation
+  Date        Author      Description
+  2022-03-11  J.Dalby     Initial creation
+  2022-03-20  A.Asturias  create_image_db and get_apod_info functions completed
 """
+from email.mime import image
 from sys import argv, exit
 from datetime import datetime, date
 from hashlib import sha256
 from os import path
+from sqlite3 import connect
+from requests import get
+from json import loads
 
 def main():
 
@@ -116,7 +121,18 @@ def get_apod_info(date):
     :param date: APOD date formatted as YYYY-MM-DD
     :returns: Dictionary of APOD info
     """    
-    return {"todo" : "TODO"}
+
+    #define constants with link to API and key
+    APOD_URL = "https://api.nasa.gov/planetary/apod"
+    APOD_KEY = "lMDGG0bANZOe9caY59RJmVoaviTTzzdTDRihVaw5"
+
+    #dictionary with parameters to send to APOD
+    parameters = {'api_key': APOD_KEY, 'date': date}
+
+    #make request to APOD and convert it to dictionary
+    api_response = get(APOD_URL, params=parameters).json()
+
+    return api_response
 
 def print_apod_info(image_url, image_path, image_size, image_sha256):
     """
@@ -157,7 +173,30 @@ def create_image_db(db_path):
     :param db_path: Path of .db file
     :returns: None
     """
-    return #TODO
+
+    #establish connection with the target database or creates it if it does not exist
+    db_connection = connect(db_path)
+
+    #create a cursor for the db in order to make queries
+    db_cursor = db_connection.cursor()
+
+    #query to create images table
+    query = """CREATE TABLE IF NOT EXISTS images (
+        id integer PRIMARY KEY NOT NULL,
+        full_path text NOT NULL,
+        file_size int NOT NULL,
+        hash_value text NOT NULL,
+        date_downloaded datetime NOT NULL
+        );"""
+
+    #execute query using the cursor object
+    db_cursor.execute(query)
+
+    #save changes and close connection
+    db_connection.commit()
+    db_connection.close()
+
+    return None
 
 def add_image_to_db(db_path, image_path, image_size, image_sha256):
     """
