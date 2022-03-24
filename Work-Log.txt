@@ -18,3 +18,8 @@ and commits
 obtained from API
 - Help establishing the connection obtained from: https://medium.com/daily-python/consuming-nasa-api-using-python-part-1-daily-python-17-4ce104fa47ab
 - 1 hr 40 min of work approximately
+
+2022-03-24
+- if statement added to validate the connection to APOD
+- worked on get_apod_info function
+- 10 min of work approximately
