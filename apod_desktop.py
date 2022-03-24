@@ -16,6 +16,7 @@ History:
   Date        Author      Description
   2022-03-11  J.Dalby     Initial creation
   2022-03-20  A.Asturias  create_image_db and get_apod_info functions completed
+  2022-03-24  A.Asturias  if statement added to validate the connection to APOD
 """
 from email.mime import image
 from sys import argv, exit
@@ -41,6 +42,8 @@ def main():
     # Get info for the APOD
     apod_info_dict = get_apod_info(apod_date)
     
+    #------CONTINUE-------------
+
     # Download today's APOD
     image_url = "TODO"
     image_msg = download_apod_image(image_url)
@@ -129,10 +132,19 @@ def get_apod_info(date):
     #dictionary with parameters to send to APOD
     parameters = {'api_key': APOD_KEY, 'date': date}
 
-    #make request to APOD and convert it to dictionary
-    api_response = get(APOD_URL, params=parameters).json()
+    #make request to APOD
+    api_response = get(APOD_URL, params=parameters)
 
-    return api_response
+    #verify the connection was successful
+    if api_response.status_code == 200:
+        print("Request to APOD successful!")
+        return api_response.json()
+    elif api_response.status_code == 404:
+        print("Unable to establish connection: " + str(api_response.status_code) + "\nMake sure to input an existing past date.")
+        exit('Script execution aborted')
+    else:
+        print("Unable to establish connection: " + str(api_response.status_code))
+        exit('Script execution aborted')
 
 def print_apod_info(image_url, image_path, image_size, image_sha256):
     """
