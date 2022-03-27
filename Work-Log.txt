@@ -23,3 +23,7 @@ obtained from API
 - if statement added to validate the connection to APOD
 - worked on get_apod_info function
 - 10 min of work approximately
+
+2022-03-27
+- prints added to create_image_db
+- 5 min of work
