@@ -87,7 +87,8 @@ def get_apod_date():
     Aborts script execution if date format is invalid.
 
     :returns: APOD date as a string in 'YYYY-MM-DD' format
-    """    
+    """   
+
     if len(argv) >= 3:
         # Date parameter has been provided, so get it
         apod_date = argv[2]
@@ -186,6 +187,8 @@ def create_image_db(db_path):
     :returns: None
     """
 
+    print("Validating existance of database...", end=" ")
+
     #establish connection with the target database or creates it if it does not exist
     db_connection = connect(db_path)
 
@@ -207,6 +210,8 @@ def create_image_db(db_path):
     #save changes and close connection
     db_connection.commit()
     db_connection.close()
+
+    print("done")
 
     return None
 
