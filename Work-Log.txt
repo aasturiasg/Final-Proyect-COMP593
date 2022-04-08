@@ -27,3 +27,20 @@ obtained from API
 2022-03-27
 - prints added to create_image_db
 - 5 min of work
+
+2022-04-07
+- image's URL extracted from apod_info_dict
+- download_apod_image function completed, using get with image URL
+- help obtained from: https://www.scrapingbee.com/blog/download-image-python/
+- image's sha256 digest produced
+- help obtained from: https://docs.python.org/3/library/hashlib.html
+- image's size in bytes obtained using the len() method
+- help obtained from: https://www.tutorialkart.com/python/how-to-find-length-of-bytes-in-python/#:~:text=To%20find%20the%20length%20of,of%20bytes%20in%20the%20object.&text=In%20the%20following%20example%2C%20we,length%20using%20len()%20function.
+- get_image_path function completed
+- print_apod_info function completed 
+- image_already_in_db function completed
+- help with sqlite3 obtained from previous labs:
+https://github.com/aasturiasg/COMP-593-Repository/blob/main/Lab-3-starting-with-databases.ipynb
+https://github.com/aasturiasg/COMP-593-Repository/blob/main/Lab-4-Advanced-SQL-%26-Files.ipynb
+- help with placeholders obtained from: https://blog.finxter.com/sqlite-python-placeholder-four-methods-for-sql-statements/#:~:text=The%20sqlite3%20module%20supports%20two,also%20available%20for%20SQL%20statements.
+- 2 hr 30 min of work approximately
