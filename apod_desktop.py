@@ -17,15 +17,21 @@ History:
   2022-03-11  J.Dalby     Initial creation
   2022-03-20  A.Asturias  create_image_db and get_apod_info functions completed
   2022-03-24  A.Asturias  if statement added to validate the connection to APOD
+  2022-03-27  A.Asturias  prints added to create_image_db
+  2022-04-07  A.Asturias  download_apod_image, get_image_path, print_apod_info, and image_already_in_db functions completed
 """
 from email.mime import image
+from logging import PlaceHolder
+from ntpath import join
 from sys import argv, exit
 from datetime import datetime, date
 from hashlib import sha256
 from os import path
 from sqlite3 import connect
+from tkinter import image_names
+from urllib import response
 from requests import get
-from json import loads
+from shutil import copyfileobj
 
 def main():
 
@@ -41,14 +47,12 @@ def main():
 
     # Get info for the APOD
     apod_info_dict = get_apod_info(apod_date)
-    
-    #------CONTINUE-------------
 
     # Download today's APOD
-    image_url = "TODO"
+    image_url = apod_info_dict['url']
     image_msg = download_apod_image(image_url)
-    image_sha256 = "TODO"
-    image_size = -1 # TODO
+    image_sha256 = sha256(image_msg.content).hexdigest()
+    image_size = len(image_msg.content)
     image_path = get_image_path(image_url, image_dir_path)
 
     # Print APOD image information
@@ -72,7 +76,7 @@ def get_image_dir_path():
     if len(argv) >= 2:
         dir_path = argv[1]
         if path.isdir(dir_path):
-            print("Images directory:", dir_path)
+            print("\nImages directory:", dir_path)
             return dir_path
         else:
             print('Error: Non-existent directory', dir_path)
@@ -115,7 +119,17 @@ def get_image_path(image_url, dir_path):
     :param dir_path: Path of directory in which image is saved locally
     :returns: Path at which image is saved locally
     """
-    return "TODO"
+
+    print("Determining image local path...", end=" ")
+
+    #split image URL to get the section after the last / to use as image name
+    img_name = image_url.split("/")[-1]
+
+    #creates a valid path to store an image file in the directory selected
+    image_path = path.join(dir_path, img_name)
+    print("done!")
+
+    return image_path
 
 def get_apod_info(date):
     """
@@ -157,7 +171,14 @@ def print_apod_info(image_url, image_path, image_size, image_sha256):
     :param image_sha256: SHA-256 of image
     :returns: None
     """    
-    return #TODO
+
+    #print all the known information about the APOD image
+    print("\n---------- APOD Image Information ----------")
+    print('URL: ' + image_url)
+    print('Local path: ' + image_path)
+    print('Size: ' + str(image_size) + " bytes")
+    print('SHA-256 digest: ' + image_sha256)
+    print("--------------------------------------------\n")
 
 def download_apod_image(image_url):
     """
@@ -166,7 +187,17 @@ def download_apod_image(image_url):
     :param image_url: URL of image
     :returns: Response message that contains image data
     """
-    return "TODO"
+    
+    #get a response from the url directing to APOD's image
+    response = get(image_url, stream = True)
+
+    #make sure the response was successful
+    if response.status_code == 200:
+        print('Image sucessfully downloaded from', image_url)
+        return response
+    else:
+        print('Error: Unable to retrieve image from URL.')
+        exit('Script execution aborted')
 
 def save_image_file(image_msg, image_path):
     """
@@ -178,6 +209,9 @@ def save_image_file(image_msg, image_path):
     :returns: None
     """
     return #TODO
+
+    #with open(file_name,'wb') as f:
+    #shutil.copyfileobj(res.raw, f)
 
 def create_image_db(db_path):
     """
@@ -211,9 +245,7 @@ def create_image_db(db_path):
     db_connection.commit()
     db_connection.close()
 
-    print("done")
-
-    return None
+    print("done!")
 
 def add_image_to_db(db_path, image_path, image_size, image_sha256):
     """
@@ -236,7 +268,38 @@ def image_already_in_db(db_path, image_sha256):
     :param image_sha256: SHA-256 of image
     :returns: True if image is already in DB; False otherwise
     """ 
-    return True #TODO
+
+    print("Validating existance of APOD image entry in database...", end=" ")
+
+    #establish connection with the images database
+    db_connection = connect(db_path)
+
+    #create a cursor for the db in order to make queries
+    db_cursor = db_connection.cursor()
+
+    #query to count images matching the hash
+    query = """SELECT COUNT(id) from images
+               WHERE hash_value = :hash;"""
+
+    #placeholder to replace the image hash in the query
+    placeholder = {'hash': image_sha256}
+    
+    #execute query using the cursor object and substituting the placeholder
+    db_cursor.execute(query, placeholder)
+
+    #get all results from query
+    query_result = db_cursor.fetchall()
+
+    #close connection
+    db_connection.close()
+
+    #determine if there was a match or not
+    if query_result[0][0] == 0:
+        print("image not in database!")
+        return False
+    else:
+        print("image already in database!")
+        return True
 
 def set_desktop_background_image(image_path):
     """
