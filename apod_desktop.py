@@ -19,19 +19,16 @@ History:
   2022-03-24  A.Asturias  if statement added to validate the connection to APOD
   2022-03-27  A.Asturias  prints added to create_image_db
   2022-04-07  A.Asturias  download_apod_image, get_image_path, print_apod_info, and image_already_in_db functions completed
+  2022-04-17  A.Asturias  save_image_file and set_desktop_background_image functions completed, add_image_to_db started
 """
-from email.mime import image
-from logging import PlaceHolder
-from ntpath import join
+
 from sys import argv, exit
 from datetime import datetime, date
 from hashlib import sha256
 from os import path
 from sqlite3 import connect
-from tkinter import image_names
-from urllib import response
 from requests import get
-from shutil import copyfileobj
+import ctypes
 
 def main():
 
@@ -61,7 +58,7 @@ def main():
     # Add image to cache if not already present
     if not image_already_in_db(db_path, image_sha256):
         save_image_file(image_msg, image_path)
-        add_image_to_db(db_path, image_path, image_size, image_sha256)
+        ########add_image_to_db(db_path, image_path, image_size, image_sha256)
 
     # Set the desktop background image to the selected APOD
     set_desktop_background_image(image_path)
@@ -208,10 +205,16 @@ def save_image_file(image_msg, image_path):
     :param image_path: Path to save image file
     :returns: None
     """
-    return #TODO
 
-    #with open(file_name,'wb') as f:
-    #shutil.copyfileobj(res.raw, f)
+    print("Saving image to local folder...", end=" ")
+
+    #open (create if non existent) a file with the local path specified, in write binary mode
+    image_file = open(image_path, 'wb')
+    #write binary string to file and close it
+    image_file.write(image_msg.content)
+    image_file.close()
+
+    print("done!")
 
 def create_image_db(db_path):
     """
@@ -257,7 +260,35 @@ def add_image_to_db(db_path, image_path, image_size, image_sha256):
     :param image_sha256: SHA-256 of image
     :returns: None
     """
-    return #TODO
+
+    print("Saving data to database...", end=" ")
+
+    #establish connection with the target database
+    db_connection = connect(db_path)
+
+    #create a cursor for the db in order to make queries
+    db_cursor = db_connection.cursor()
+
+    #query to insert values in the images table
+    query = """INSERT INTO images (
+        full_path,
+        file_size,
+        hash_value,
+        date_downloaded)
+        VALUES (?, ?, ?, ?)
+        );"""
+
+    #tuple to substitute placeholders in query
+    placeholder = (image_path, image_size, image_sha256, datetime.now())
+
+    #execute query using the cursor object and values for placeholders
+    db_cursor.execute(query, placeholder)
+
+    #save changes and close connection
+    db_connection.commit()
+    db_connection.close()
+
+    print("done!")
 
 def image_already_in_db(db_path, image_sha256):
     """
@@ -308,6 +339,12 @@ def set_desktop_background_image(image_path):
     :param image_path: Path of image file
     :returns: None
     """
-    return #TODO
+
+    print("Setting new desktop background...", end=" ")
+
+    #set current desktop background to be the APOD image
+    ctypes.windll.user32.SystemParametersInfoW(20, 0, image_path, 0)
+
+    print("done!")
 
 main()
