@@ -44,3 +44,10 @@ https://github.com/aasturiasg/COMP-593-Repository/blob/main/Lab-3-starting-with-
 https://github.com/aasturiasg/COMP-593-Repository/blob/main/Lab-4-Advanced-SQL-%26-Files.ipynb
 - help with placeholders obtained from: https://blog.finxter.com/sqlite-python-placeholder-four-methods-for-sql-statements/#:~:text=The%20sqlite3%20module%20supports%20two,also%20available%20for%20SQL%20statements.
 - 2 hr 30 min of work approximately
+
+2022-04-17
+- save_image_file function completed, using open and write binary ('wb')
+- help obtained from: https://www.adamsmith.haus/python/answers/how-to-download-an-image-using-requests-in-python
+- add_image_to_db function started, issues saving database entry
+- set_desktop_background_image function completed
+- help obtained from: https://dev.to/matin/change-your-windows-background-by-running-a-python-script-281p
