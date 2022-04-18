@@ -20,6 +20,7 @@ History:
   2022-03-27  A.Asturias  prints added to create_image_db
   2022-04-07  A.Asturias  download_apod_image, get_image_path, print_apod_info, and image_already_in_db functions completed
   2022-04-17  A.Asturias  save_image_file and set_desktop_background_image functions completed, add_image_to_db started
+  2022-04-18  A.Asturias  error in add_image_to_db corrected
 """
 
 from sys import argv, exit
@@ -58,7 +59,7 @@ def main():
     # Add image to cache if not already present
     if not image_already_in_db(db_path, image_sha256):
         save_image_file(image_msg, image_path)
-        ########add_image_to_db(db_path, image_path, image_size, image_sha256)
+        add_image_to_db(db_path, image_path, image_size, image_sha256)
 
     # Set the desktop background image to the selected APOD
     set_desktop_background_image(image_path)
@@ -275,8 +276,7 @@ def add_image_to_db(db_path, image_path, image_size, image_sha256):
         file_size,
         hash_value,
         date_downloaded)
-        VALUES (?, ?, ?, ?)
-        );"""
+        VALUES (?, ?, ?, ?);"""
 
     #tuple to substitute placeholders in query
     placeholder = (image_path, image_size, image_sha256, datetime.now())
@@ -329,7 +329,7 @@ def image_already_in_db(db_path, image_sha256):
         print("image not in database!")
         return False
     else:
-        print("image already in database!")
+        print("image already in database! Image not saved.")
         return True
 
 def set_desktop_background_image(image_path):
@@ -343,7 +343,7 @@ def set_desktop_background_image(image_path):
     print("Setting new desktop background...", end=" ")
 
     #set current desktop background to be the APOD image
-    ctypes.windll.user32.SystemParametersInfoW(20, 0, image_path, 0)
+    ctypes.windll.user32.SystemParametersInfoW(20, 0, image_path, 3)
 
     print("done!")
 
